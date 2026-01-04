@@ -1,0 +1,124 @@
+/* Navbar.css */
+
+.navbar {
+  /* Tamna pozadina koja se stapa sa body-em ali je malo "izdignuta" */
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* Subtilni glass effect */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.navbar-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 1px;
+  transition: var(--transition);
+}
+
+.navbar-logo span {
+  color: var(--accent); /* Zlatni dio logotipa */
+}
+
+.navbar-logo:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.navbar-link {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.navbar-link:hover {
+  color: var(--accent);
+  background: rgba(197, 160, 89, 0.05); /* Vrlo blagi zlatni sjaj */
+}
+
+.navbar-link.active {
+  color: var(--accent);
+  position: relative;
+}
+
+/* Donja linija za aktivni link */
+.navbar-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.navbar-user {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-left: 1px solid var(--border);
+  margin-left: 10px;
+}
+
+/* Dugme unutar navbara */
+.navbar .btn-primary {
+  padding: 8px 20px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 15px 20px;
+  }
+
+  .navbar-logo {
+    font-size: 20px;
+  }
+
+  .navbar-links {
+    gap: 0;
+  }
+
+  .navbar-link {
+    padding: 8px 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  
+  .navbar-user {
+    display: none; /* Sakrij ime na mobitelu radi prostora */
+  }
+}

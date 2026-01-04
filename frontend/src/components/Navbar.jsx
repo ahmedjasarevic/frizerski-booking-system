@@ -1,9 +1,54 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import "./Navbar.css";
 
 export default function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const isLoggedIn = !!user;
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
   return (
-    <nav style={{ padding: 20 }}>
-      <Link to='/'>Početna</Link> | <Link to='/admin'>Admin</Link>
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          ✂️ Frizerski Salon
+        </Link>
+        <div className="navbar-links">
+          <Link
+            to="/"
+            className={`navbar-link ${location.pathname === "/" ? "active" : ""}`}
+          >
+            Početna
+          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                to="/admin"
+                className={`navbar-link ${location.pathname === "/admin" ? "active" : ""}`}
+              >
+                Admin Panel
+              </Link>
+              <span className="navbar-user">👤 {user?.username}</span>
+              <button className="btn btn-outline btn-sm" onClick={handleLogout}>
+                Odjavi se
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className={`navbar-link ${location.pathname === "/login" ? "active" : ""}`}
+            >
+              Prijava
+            </Link>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }

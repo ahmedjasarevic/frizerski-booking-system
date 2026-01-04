@@ -1,0 +1,146 @@
+/* Booking.css */
+
+.booking-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.booking-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.booking-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+/* Info kartica o odabranoj usluzi - Glassmorphism efekt */
+.service-info-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--accent); /* Zlatni okvir naglašava odabir */
+  padding: 40px;
+  border-radius: var(--radius);
+  margin-bottom: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.service-info-icon {
+  font-size: 56px;
+  filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.3));
+}
+
+.service-info-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: var(--white);
+  margin: 0;
+}
+
+.service-info-price {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* Forma za rezervaciju */
+.booking-form {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 40px;
+  border-radius: var(--radius);
+}
+
+.form-group {
+  margin-bottom: 32px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: var(--accent); /* Labele su u zlatnoj boji */
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* Grid za termine */
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Poruka o grešci - mora biti uočljiva ali stilizovana */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ff8080;
+  padding: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius);
+  margin-bottom: 30px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loading-time-slots {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-dim);
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 20px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 10px 25px rgba(197, 160, 89, 0.3);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .booking-container {
+    padding: 20px 16px;
+  }
+  
+  .booking-form, .service-info-card {
+    padding: 24px;
+  }
+
+  .booking-title {
+    font-size: 32px;
+  }
+
+  .time-slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}

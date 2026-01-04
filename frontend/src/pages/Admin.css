@@ -1,0 +1,219 @@
+/* Admin.css */
+
+.admin-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.admin-header {
+  text-align: left; /* Dashboard stil */
+  margin-bottom: 50px;
+  border-left: 4px solid var(--accent);
+  padding-left: 24px;
+}
+
+.admin-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--white);
+  margin: 0;
+}
+
+.admin-subtitle {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* Dashboard Filters & Stats */
+.admin-filters {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius);
+}
+
+.filter-group label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-right: 12px;
+}
+
+/* Statistika - Luksuzni izgled */
+.stats {
+  display: flex;
+  gap: 40px;
+}
+
+.stat-item {
+  text-align: right;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* Kartice termina */
+.appointment-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 16px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.appointment-card:hover {
+  border-color: rgba(197, 160, 89, 0.4);
+  transform: translateX(5px);
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.service-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--white);
+}
+
+.appointment-time {
+  background: var(--accent);
+  color: #000;
+  padding: 6px 16px;
+  font-weight: 800;
+  border-radius: var(--radius);
+}
+
+/* Tabovi - Minimalizam */
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  background: #000;
+  padding: 6px;
+  margin-bottom: 32px;
+  border-radius: var(--radius);
+  max-width: fit-content;
+}
+
+.tab-btn {
+  padding: 10px 24px;
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--radius);
+}
+
+.tab-btn.active {
+  background: var(--bg-panel);
+  color: var(--accent);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Modal - Dark Glass */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background: var(--bg-panel);
+  border: 1px solid var(--accent);
+  padding: 40px;
+  border-radius: var(--radius);
+  color: var(--white);
+}
+
+.modal-header h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent);
+}
+
+/* Statusi */
+.status-upcoming { border-left: 4px solid var(--accent); }
+.status-past { border-left: 4px solid #333; opacity: 0.6; }
+
+/* Dugmad */
+.btn-danger {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .admin-header { padding-left: 16px; }
+  .admin-filters { flex-direction: column; gap: 24px; }
+  .stats { width: 100%; justify-content: space-between; }
+}
+
+/* Tabovi - Minimalizam */
+.admin-tabs {
+  display: flex;
+  gap: 8px; /* Malo više razmaka između dugmadi */
+  background: #000; /* Crna baza */
+  padding: 6px;
+  margin-bottom: 32px;
+  border-radius: var(--radius);
+  max-width: fit-content;
+  border: 1px solid var(--border); /* Suptilna ivica oko cijelog tab bara */
+}
+
+.tab-btn {
+  padding: 12px 28px;
+  color: var(--text-dim); /* Boja teksta kad NIJE aktivan */
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  border-radius: var(--radius);
+  
+  /* KLJUČNE LINIJE KOJE TI NEDOSTAJU: */
+  background: transparent; 
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+/* Stil kada pređeš mišem preko neaktivnog taba */
+.tab-btn:hover:not(.active) {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Stil za AKTIVAN tab */
+.tab-btn.active {
+  background: var(--bg-panel); /* Ili koristi var(--accent) ako želiš da bude zlatan */
+  color: var(--accent);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}

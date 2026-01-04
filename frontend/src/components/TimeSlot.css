@@ -1,0 +1,60 @@
+/* TimeSlot.css */
+
+.time-slot {
+  padding: 14px 24px;
+  background: #000; /* Potpuno crna podloga unutar slota */
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+}
+
+/* Hover efekt - suptilno zlato */
+.time-slot:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--white);
+  background: rgba(197, 160, 89, 0.05);
+}
+
+/* Selektovan termin - zlato sija */
+.time-slot-selected {
+  background: var(--accent) !important;
+  color: #000 !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Zauzet termin - "Mrtav" izgled */
+.time-slot-booked {
+  opacity: 0.2; /* Jako zatamnjen */
+  cursor: not-allowed;
+  background: transparent;
+  border: 1px dashed var(--border); /* Isprekidana linija za zauzeto */
+  filter: grayscale(1);
+}
+
+/* Badge za zauzeto - diskretno i elegantno */
+.booked-badge {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--danger);
+  margin-top: 4px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* Specijalni efekt za vrijeme - npr. 14:00 */
+.time-slot-value {
+  font-family: 'Inter', sans-serif;
+}

@@ -1,0 +1,140 @@
+/* Success.css */
+
+.success-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  padding: 40px 20px;
+}
+
+.success-card {
+  max-width: 550px;
+  width: 100%;
+  text-align: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 60px 40px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+/* Gornja linija kao akcenat */
+.success-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+
+.success-icon {
+  font-size: 80px;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.4));
+  animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.success-message {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+/* Detalji rezervacije kao elegantna priznanica */
+.booking-details {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px;
+  margin: 40px 0;
+  text-align: left;
+}
+
+.booking-details h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.detail-value {
+  font-weight: 700;
+  color: var(--white);
+  font-size: 15px;
+}
+
+.success-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Poseban stil za sekundarno dugme u Success stanju */
+.success-actions .btn-outline {
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+.success-actions .btn-outline:hover {
+  border-color: var(--white);
+  color: var(--white);
+}
+
+@media (max-width: 768px) {
+  .success-card {
+    padding: 40px 24px;
+  }
+
+  .success-title {
+    font-size: 28px;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+
+  .success-actions .btn {
+    width: 100%;
+  }
+}
