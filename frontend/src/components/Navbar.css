@@ -22,7 +22,7 @@
 }
 
 .navbar-logo {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 26px;
   font-weight: 700;
   color: var(--white);
@@ -117,8 +117,14 @@
     font-size: 11px;
     letter-spacing: 0.5px;
   }
-  
+
   .navbar-user {
     display: none; /* Sakrij ime na mobitelu radi prostora */
   }
+}
+
+.navbar-logo-img {
+  height: 130px; /* ili 32px */
+  width: auto;
+  display: block;
 }

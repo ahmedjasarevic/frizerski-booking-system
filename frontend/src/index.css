@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap");
 
 * {
   margin: 0;
@@ -10,27 +10,31 @@
   /* Paleta: Antracit, Crna, Mesing/Zlato */
   --bg-dark: #0a0b0c;
   --bg-panel: #141619;
-  --accent: #c5a059;         /* Zlatni mesing */
+  --accent: #c5a059; /* Zlatni mesing */
   --accent-hover: #e2be7d;
   --text-main: #f0f0f0;
   --text-dim: #8e9196;
   --white: #ffffff;
   --danger: #ff4d4d;
   --success: #00ff9d;
-  
+
   /* Efekti */
   --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   --glass: rgba(255, 255, 255, 0.03);
   --border: rgba(255, 255, 255, 0.08);
-  --radius: 2px;             /* Oštriji rubovi za premium izgled */
+  --radius: 2px; /* Oštriji rubovi za premium izgled */
   --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: var(--bg-dark);
   /* Subtilna tekstura u pozadini */
-  background-image: radial-gradient(circle at 50% 50%, #1a1d20 0%, #0a0b0c 100%);
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #1a1d20 0%,
+    #0a0b0c 100%
+  );
   color: var(--text-main);
   line-height: 1.6;
   min-height: 100vh;
@@ -52,7 +56,9 @@ body {
 }
 
 /* Tipografija */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   letter-spacing: -0.5px;
 }
 
@@ -118,6 +124,7 @@ h1, h2, h3 {
   padding: 14px;
   color: var(--white);
   transition: var(--transition);
+  width: 100%;
 }
 
 .input:focus {
@@ -132,14 +139,16 @@ h1, h2, h3 {
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   /* Trik: Invertujemo boju (obično je crna) i onda joj preko filtera dajemo zlatni ton */
-  filter: invert(72%) sepia(17%) saturate(1044%) hue-rotate(352deg) brightness(89%) contrast(85%);
+  filter: invert(72%) sepia(17%) saturate(1044%) hue-rotate(352deg)
+    brightness(89%) contrast(85%);
   transition: var(--transition);
 }
 
 /* 2. Hover efekat na ikonicu */
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
   transform: scale(1.2);
-  filter: invert(85%) sepia(20%) saturate(1200%) hue-rotate(350deg) brightness(100%) contrast(90%);
+  filter: invert(85%) sepia(20%) saturate(1200%) hue-rotate(350deg)
+    brightness(100%) contrast(90%);
 }
 
 /* 3. Dodatni fix za tamni mod - da tekst unutar inputa ne bude crn na tamnom */

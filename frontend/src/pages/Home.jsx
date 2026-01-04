@@ -13,7 +13,7 @@ export default function Home() {
       try {
         setLoading(true);
         const response = await serviceAPI.getAll();
-        
+
         if (response.data.success) {
           setServices(response.data.data || []);
           setError(null);
@@ -31,9 +31,9 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+      <div className='page-container'>
+        <div className='loading-container'>
+          <div className='loading-spinner'></div>
           <p>Učitavanje usluga...</p>
         </div>
       </div>
@@ -42,13 +42,13 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="page-container">
-        <div className="error-container">
-          <div className="error-icon">⚠️</div>
+      <div className='page-container'>
+        <div className='error-container'>
+          <div className='error-icon'>⚠️</div>
           <h2>Greška</h2>
           <p>{error}</p>
           <button
-            className="btn btn-primary"
+            className='btn btn-primary'
             onClick={() => window.location.reload()}
           >
             Pokušaj ponovo
@@ -59,22 +59,22 @@ export default function Home() {
   }
 
   return (
-    <div className="page-container">
-      <div className="home-hero">
-        <h1 className="hero-title">Dobrodošli u naš salon</h1>
-        <p className="hero-subtitle">
+    <div className='page-container'>
+      <div className='home-hero'>
+        <h1 className='hero-title'>Dobrodošli u naš salon</h1>
+        <p className='hero-subtitle'>
           Izaberite uslugu i rezervišite termin koji vam odgovara
         </p>
       </div>
 
       {services.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">💇‍♀️</div>
+        <div className='empty-state'>
+          <div className='empty-icon'>💇‍♀️</div>
           <h2>Trenutno nema dostupnih usluga</h2>
           <p>Molimo provjerite kasnije.</p>
         </div>
       ) : (
-        <div className="services-grid">
+        <div className='services-grid'>
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}

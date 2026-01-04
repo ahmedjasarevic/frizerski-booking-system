@@ -15,7 +15,7 @@
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif; /* Elegantni font iz indexa */
+  font-family: "Playfair Display", serif; /* Elegantni font iz indexa */
   font-size: clamp(40px, 8vw, 72px); /* Dinamična veličina teksta */
   font-weight: 800;
   color: var(--white);
@@ -74,20 +74,23 @@
   margin-bottom: 24px;
 }
 
-.error-icon, .empty-icon {
+.error-icon,
+.empty-icon {
   font-size: 60px;
   margin-bottom: 24px;
   filter: grayscale(1) sepia(1) hue-rotate(15deg) brightness(1.2); /* Zlatni odsjaj ikona */
 }
 
-.error-container h2, .empty-state h2 {
-  font-family: 'Playfair Display', serif;
+.error-container h2,
+.empty-state h2 {
+  font-family: "Playfair Display", serif;
   font-size: 32px;
   margin-bottom: 16px;
   color: var(--white);
 }
 
-.error-container p, .empty-state p {
+.error-container p,
+.empty-state p {
   color: var(--text-dim);
   margin-bottom: 32px;
 }
