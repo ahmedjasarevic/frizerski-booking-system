@@ -1,16 +1,31 @@
-# React + Vite
+# Frizerski Booking Sistem
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ovo je **full-stack aplikacija za rezervaciju termina u frizerskim salonima**, razvijena kao praktični projekt.  
+Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prati sve rezervacije.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎯 Funkcionalnosti aplikacije
 
-## React Compiler
+### Za korisnike:
+- Prikaz svih dostupnih frizerskih usluga  
+- Odabir datuma i slobodnog termina  
+- Unos imena i broja telefona za rezervaciju  
+- Potvrda rezervacije sa prikazom uspješnog završetka  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Za admina:
+- Pregled svih rezervacija  
+- Brzi uvid u zauzetost termina po datumu i vremenu  
+- Jednostavan interfejs bez komplikacija  
 
-## Expanding the ESLint configuration
+### Tehničke funkcionalnosti:
+- Frontend u React + Vite  
+- Backend u Express.js  
+- Supabase za bazu podataka i autentifikaciju (kasnije)  
+- Sigurno učitavanje podataka sa error handlingom  
+- Modularna struktura za lako proširenje
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🏗️ Struktura projekta
+
