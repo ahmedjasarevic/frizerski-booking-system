@@ -1,0 +1,21 @@
+{
+  "name": "sistem-za-rezervaciju-termina",
+  "version": "1.0.0",
+  "description": "Ovo je **full-stack aplikacija za rezervaciju termina u frizerskim salonima**, razvijena kao praktični projekt.  \r Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prati sve rezervacije.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmedjasarevic/frizerski-booking-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ahmedjasarevic/frizerski-booking-system/issues"
+  },
+  "homepage": "https://github.com/ahmedjasarevic/frizerski-booking-system#readme"
+}
