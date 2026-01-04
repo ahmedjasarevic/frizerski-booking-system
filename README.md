@@ -29,3 +29,22 @@ Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prat
 
 ## 🏗️ Struktura projekta
 
+sistem-za-rezervaciju-termina/
+├── backend/ # Express backend
+│ ├── src/
+│ │ ├── app.js # Glavni Express app
+│ │ ├── server.js # Start servera
+│ │ └── routes/ # API rute (services, appointments)
+│ └── package.json
+│
+├── frontend/ # React frontend (Vite)
+│ ├── src/
+│ │ ├── components/ # UI komponente (Navbar, ServiceCard, BookingForm...)
+│ │ ├── pages/ # Stranice (Home, Booking, Success, Admin)
+│ │ ├── services/ # Supabase connection i API pozivi
+│ │ └── App.jsx # Root komponenta
+│ └── package.json
+│
+├── .gitignore # Ignorira node_modules, env, build itd.
+├── README.md # Ovaj fajl
+└── package-lock.json / yarn.lock # Lock fajlovi za npm/yarn
