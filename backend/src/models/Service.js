@@ -1,8 +1,6 @@
-// Model za usluge (Services)
 import pool from '../config/database.js';
 
 class Service {
-  // Dohvatanje svih usluga
   static async findAll() {
     try {
       const [rows] = await pool.execute(
@@ -14,7 +12,6 @@ class Service {
     }
   }
 
-  // Pronalaženje usluge po ID-u
   static async findById(id) {
     try {
       const [rows] = await pool.execute(
@@ -27,39 +24,42 @@ class Service {
     }
   }
 
-  // Kreiranje nove usluge
   static async create(serviceData) {
-    const { name, description, price, duration, icon = '💇' } = serviceData;
+    const { name, description, price, duration, frizer_id, icon = '💇' } = serviceData;
     
+    if (![30, 60, 90, 120].includes(duration)) {
+      throw new Error('Trajanje usluge mora biti 30, 60, 90 ili 120 minuta');
+    }
+
     try {
       const [result] = await pool.execute(
-        'INSERT INTO services (name, description, price, duration, icon) VALUES (?, ?, ?, ?, ?)',
-        [name, description, price, duration, icon]
+        'INSERT INTO services (name, description, price, duration, frizer_id, icon) VALUES (?, ?, ?, ?, ?, ?)',
+        [name, description, price, duration, frizer_id, icon]
       );
-      
       return await this.findById(result.insertId);
     } catch (error) {
       throw new Error(`Greška pri kreiranju usluge: ${error.message}`);
     }
   }
 
-  // Ažuriranje usluge
   static async update(id, serviceData) {
-    const { name, description, price, duration, icon } = serviceData;
-    
+    const { name, description, price, duration, frizer_id, icon } = serviceData;
+
+    if (duration && ![30, 60, 90, 120].includes(duration)) {
+      throw new Error('Trajanje usluge mora biti 30, 60, 90 ili 120 minuta');
+    }
+
     try {
       await pool.execute(
-        'UPDATE services SET name = ?, description = ?, price = ?, duration = ?, icon = ? WHERE id = ?',
-        [name, description, price, duration, icon, id]
+        'UPDATE services SET name = ?, description = ?, price = ?, duration = ?, frizer_id = ?, icon = ? WHERE id = ?',
+        [name, description, price, duration, frizer_id, icon, id]
       );
-      
       return await this.findById(id);
     } catch (error) {
       throw new Error(`Greška pri ažuriranju usluge: ${error.message}`);
     }
   }
 
-  // Brisanje usluge
   static async delete(id) {
     try {
       const [result] = await pool.execute(

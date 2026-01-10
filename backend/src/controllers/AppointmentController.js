@@ -1,8 +1,6 @@
-// Kontroler za upravljanje rezervacijama
 import Appointment from '../models/Appointment.js';
 
 class AppointmentController {
-  // GET - Dohvatanje svih rezervacija
   static async getAllAppointments(req, res) {
     try {
       const appointments = await Appointment.findAll();
@@ -12,45 +10,31 @@ class AppointmentController {
     }
   }
 
-  // GET - Dohvatanje rezervacije po ID-u
   static async getAppointmentById(req, res) {
     try {
       const { id } = req.params;
       const appointment = await Appointment.findById(id);
-      
-      if (!appointment) {
-        return res.status(404).json({ success: false, error: 'Rezervacija nije pronađena' });
-      }
-      
+      if (!appointment) return res.status(404).json({ success: false, error: 'Rezervacija nije pronađena' });
       res.json({ success: true, data: appointment });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
   }
 
-  // GET - Dohvatanje rezervacija po datumu
   static async getAppointmentsByDate(req, res) {
     try {
       const { date } = req.params;
-      const appointments = await Appointment.findByDate(date);
+      const appointments = await Appointment.findByFrizerAndDate(req.query.frizerId || null, date);
       res.json({ success: true, data: appointments });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
   }
 
-  // GET - Dohvatanje dostupnih vremenskih slotova
   static async getAvailableSlots(req, res) {
     try {
       const { serviceId, date } = req.query;
-      
-      if (!serviceId || !date) {
-        return res.status(400).json({ 
-          success: false, 
-          error: 'serviceId i date su obavezni' 
-        });
-      }
-
+      if (!serviceId || !date) return res.status(400).json({ success: false, error: 'serviceId i date su obavezni' });
       const slots = await Appointment.getAvailableSlots(parseInt(serviceId), date);
       res.json({ success: true, data: slots });
     } catch (error) {
@@ -58,67 +42,35 @@ class AppointmentController {
     }
   }
 
-  // POST - Kreiranje nove rezervacije
   static async createAppointment(req, res) {
     try {
       const { service_id, date, time, customer_name, phone } = req.body;
-      
       if (!service_id || !date || !time || !customer_name || !phone) {
-        return res.status(400).json({ 
-          success: false, 
-          error: 'Sva polja su obavezna' 
-        });
+        return res.status(400).json({ success: false, error: 'Sva polja su obavezna' });
       }
-
-      const appointment = await Appointment.create({
-        service_id,
-        date,
-        time,
-        customer_name,
-        phone
-      });
-
+      const appointment = await Appointment.create({ service_id, date, time, customer_name, phone });
       res.status(201).json({ success: true, data: appointment });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
   }
 
-  // PUT - Ažuriranje rezervacije
   static async updateAppointment(req, res) {
     try {
       const { id } = req.params;
       const { service_id, date, time, customer_name, phone } = req.body;
-      
-      const appointment = await Appointment.findById(id);
-      if (!appointment) {
-        return res.status(404).json({ success: false, error: 'Rezervacija nije pronađena' });
-      }
-
-      const updatedAppointment = await Appointment.update(id, {
-        service_id,
-        date,
-        time,
-        customer_name,
-        phone
-      });
-
-      res.json({ success: true, data: updatedAppointment });
+      const appointment = await Appointment.update(id, { service_id, date, time, customer_name, phone });
+      res.json({ success: true, data: appointment });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
   }
 
-  // DELETE - Brisanje rezervacije
   static async deleteAppointment(req, res) {
     try {
       const { id } = req.params;
-      
       const deleted = await Appointment.delete(id);
-      if (!deleted) {
-        return res.status(404).json({ success: false, error: 'Rezervacija nije pronađena' });
-      }
-
+      if (!deleted) return res.status(404).json({ success: false, error: 'Rezervacija nije pronađena' });
       res.json({ success: true, message: 'Rezervacija uspješno obrisana' });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });

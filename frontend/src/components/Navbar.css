@@ -1,52 +1,36 @@
-/* Navbar.css */
-
 .navbar {
-  /* Tamna pozadina koja se stapa sa body-em ali je malo "izdignuta" */
   background: var(--bg-dark);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 1000;
-  /* Subtilni glass effect */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s ease; /* glatka tranzicija za shrink */
 }
 
 .navbar-container {
   max-width: 1300px;
   margin: 0 auto;
-  padding: 20px 24px;
+  padding: 20px 24px; /* početni padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.3s ease;
 }
 
-.navbar-logo {
-  font-family: "Playfair Display", serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--white);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  letter-spacing: 1px;
-  transition: var(--transition);
-}
-
-.navbar-logo span {
-  color: var(--accent); /* Zlatni dio logotipa */
-}
-
-.navbar-logo:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
+.navbar-logo-img {
+  height: 130px;  /* normalna visina logoa */
+  width: auto;
+  display: block;
+  transition: all 0.3s ease;
 }
 
 .navbar-links {
   display: flex;
   gap: 8px;
   align-items: center;
+  transition: all 0.3s ease;
 }
 
 .navbar-link {
@@ -63,7 +47,7 @@
 
 .navbar-link:hover {
   color: var(--accent);
-  background: rgba(197, 160, 89, 0.05); /* Vrlo blagi zlatni sjaj */
+  background: rgba(197, 160, 89, 0.05);
 }
 
 .navbar-link.active {
@@ -71,7 +55,6 @@
   position: relative;
 }
 
-/* Donja linija za aktivni link */
 .navbar-link.active::after {
   content: "";
   position: absolute;
@@ -91,6 +74,7 @@
   padding: 8px 16px;
   border-left: 1px solid var(--border);
   margin-left: 10px;
+  transition: all 0.3s ease;
 }
 
 /* Dugme unutar navbara */
@@ -119,12 +103,25 @@
   }
 
   .navbar-user {
-    display: none; /* Sakrij ime na mobitelu radi prostora */
+    display: none;
   }
 }
 
-.navbar-logo-img {
-  height: 130px; /* ili 32px */
-  width: auto;
-  display: block;
+/* SHRINK EFFECT */
+.navbar.shrink .navbar-container {
+  padding: 8px 24px;
+}
+
+.navbar.shrink .navbar-logo-img {
+  height: 60px; /* smanjen logo */
+}
+
+.navbar.shrink .navbar-link {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.navbar.shrink .navbar-user {
+  padding: 4px 8px;
+  font-size: 12px;
 }

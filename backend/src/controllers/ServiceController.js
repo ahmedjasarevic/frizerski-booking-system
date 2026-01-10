@@ -1,4 +1,3 @@
-// Kontroler za upravljanje uslugama
 import Service from '../models/Service.js';
 
 class ServiceController {
@@ -17,11 +16,7 @@ class ServiceController {
     try {
       const { id } = req.params;
       const service = await Service.findById(id);
-      
-      if (!service) {
-        return res.status(404).json({ success: false, error: 'Usluga nije pronađena' });
-      }
-      
+      if (!service) return res.status(404).json({ success: false, error: 'Usluga nije pronađena' });
       res.json({ success: true, data: service });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
@@ -31,16 +26,11 @@ class ServiceController {
   // POST - Kreiranje nove usluge
   static async createService(req, res) {
     try {
-      const { name, description, price, duration, icon } = req.body;
-      
-      if (!name) {
-        return res.status(400).json({ 
-          success: false, 
-          error: 'Naziv usluge je obavezan' 
-        });
+      const { name, description, price, duration, frizer_id, icon } = req.body;
+      if (!name || !frizer_id || !duration) {
+        return res.status(400).json({ success: false, error: 'Naziv, frizer i trajanje su obavezni' });
       }
-
-      const service = await Service.create({ name, description, price, duration, icon });
+      const service = await Service.create({ name, description, price, duration, frizer_id, icon });
       res.status(201).json({ success: true, data: service });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
@@ -51,15 +41,9 @@ class ServiceController {
   static async updateService(req, res) {
     try {
       const { id } = req.params;
-      const { name, description, price, duration, icon } = req.body;
-      
-      const service = await Service.findById(id);
-      if (!service) {
-        return res.status(404).json({ success: false, error: 'Usluga nije pronađena' });
-      }
-
-      const updatedService = await Service.update(id, { name, description, price, duration, icon });
-      res.json({ success: true, data: updatedService });
+      const { name, description, price, duration, frizer_id, icon } = req.body;
+      const service = await Service.update(id, { name, description, price, duration, frizer_id, icon });
+      res.json({ success: true, data: service });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
@@ -69,12 +53,8 @@ class ServiceController {
   static async deleteService(req, res) {
     try {
       const { id } = req.params;
-      
       const deleted = await Service.delete(id);
-      if (!deleted) {
-        return res.status(404).json({ success: false, error: 'Usluga nije pronađena' });
-      }
-
+      if (!deleted) return res.status(404).json({ success: false, error: 'Usluga nije pronađena' });
       res.json({ success: true, message: 'Usluga uspješno obrisana' });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });

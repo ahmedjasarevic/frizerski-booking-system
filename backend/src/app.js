@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import appointmentsRoutes from "./routes/appointments.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import frizersRoutes from './routes/frizers.js';
 
 // Učitavanje .env fajla iz root foldera projekta
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/appointments", appointmentsRoutes);
+app.use("/api/frizers", frizersRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
