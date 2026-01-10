@@ -12,6 +12,12 @@ export default function ServiceCard({ service }) {
     <div className="service-card card fade-in">
       <div className="service-icon">{service.icon || "💇"}</div>
       <h3 className="service-name">{service.name}</h3>
+
+      {/* Ispis imena frizera */}
+      {service.frizer_name && (
+        <p className="service-frizer">Frizer: {service.frizer_name}</p>
+      )}
+
       {service.description && (
         <p className="service-description">{service.description}</p>
       )}

@@ -1,33 +1,60 @@
 import { useEffect, useState } from "react";
-import { serviceAPI } from "../services/api";
+import { serviceAPI, frizerAPI } from "../services/api"; // Dodan frizerAPI
 import ServiceCard from "../components/ServiceCard";
 import "./Home.css";
 
 export default function Home() {
   const [services, setServices] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [frizers, setFrizers] = useState([]);
+  const [selectedFrizer, setSelectedFrizer] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await serviceAPI.getAll();
+        setError(null);
 
-        if (response.data.success) {
-          setServices(response.data.data || []);
-          setError(null);
+        const [servicesRes, frizersRes] = await Promise.all([
+          serviceAPI.getAll(),
+          frizerAPI.getAll()
+        ]);
+
+        if (servicesRes.data.success) {
+          setServices(servicesRes.data.data || []);
+          setFilteredServices(servicesRes.data.data || []);
+        } else {
+          setError("Greška pri učitavanju usluga.");
+        }
+
+        if (frizersRes.data.success) {
+          setFrizers(frizersRes.data.data || []);
+        } else {
+          console.error("Greška pri učitavanju frizera:", frizersRes.data.error);
         }
       } catch (err) {
-        console.error("Error fetching services:", err);
-        setError("Greška pri učitavanju usluga. Molimo pokušajte ponovo.");
+        console.error("Greška pri učitavanju podataka:", err);
+        setError("Greška pri učitavanju podataka. Molimo pokušajte ponovo.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
+    fetchData();
   }, []);
+
+  // Filter po frizeru
+  useEffect(() => {
+    if (!selectedFrizer) {
+      setFilteredServices(services);
+    } else {
+      setFilteredServices(
+        services.filter(s => s.frizer_id === parseInt(selectedFrizer))
+      );
+    }
+  }, [selectedFrizer, services]);
 
   if (loading) {
     return (
@@ -67,7 +94,23 @@ export default function Home() {
         </p>
       </div>
 
-      {services.length === 0 ? (
+      {/* Filter po frizerima */}
+      <div className='filter-bar card'>
+        <label htmlFor='filter-frizer'>Filtriraj po frizeru:</label>
+        <select
+          id='filter-frizer'
+          className='input'
+          value={selectedFrizer}
+          onChange={e => setSelectedFrizer(e.target.value)}
+        >
+          <option value=''>Svi frizeri</option>
+          {frizers.map(f => (
+            <option key={f.id} value={f.id}>{f.name}</option>
+          ))}
+        </select>
+      </div>
+
+      {filteredServices.length === 0 ? (
         <div className='empty-state'>
           <div className='empty-icon'>💇‍♀️</div>
           <h2>Trenutno nema dostupnih usluga</h2>
@@ -75,9 +118,18 @@ export default function Home() {
         </div>
       ) : (
         <div className='services-grid'>
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
-          ))}
+          {filteredServices.map(service => {
+            const frizer = frizers.find(f => f.id === service.frizer_id);
+            return (
+              <ServiceCard
+                key={service.id}
+                service={{
+                  ...service,
+                  frizer_name: frizer ? frizer.name : "Nepoznat"
+                }}
+              />
+            );
+          })}
         </div>
       )}
     </div>

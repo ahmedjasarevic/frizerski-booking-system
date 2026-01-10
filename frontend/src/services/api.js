@@ -1,6 +1,7 @@
 // API servis za komunikaciju sa backendom
 import axios from 'axios';
 
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Kreiranje axios instance sa default konfiguracijom
@@ -56,6 +57,16 @@ export const userAPI = {
   delete: (id) => api.delete(`/users/${id}`),
 };
 
+// API funkcije za frizere (koristi tabelu 'frizers')
+export const frizerAPI = {
+  getAll: () => api.get('/frizers'),
+  getById: (id) => api.get(`/frizers/${id}`),
+  create: (data) => api.post('/frizers', data),
+  update: (id, data) => api.put(`/frizers/${id}`, data),
+  delete: (id) => api.delete(`/frizers/${id}`)
+};
+
+
 // API funkcije za usluge
 export const serviceAPI = {
   getAll: () => api.get('/services'),
@@ -75,6 +86,15 @@ export const appointmentAPI = {
   create: (appointmentData) => api.post('/appointments', appointmentData),
   update: (id, appointmentData) => api.put(`/appointments/${id}`, appointmentData),
   delete: (id) => api.delete(`/appointments/${id}`),
+};
+
+// API funkcije za frizere (barbers)
+export const barberAPI = {
+  getAll: () => api.get('/barbers'),
+  getById: (id) => api.get(`/barbers/${id}`),
+  create: (barberData) => api.post('/barbers', barberData),
+  update: (id, barberData) => api.put(`/barbers/${id}`, barberData),
+  delete: (id) => api.delete(`/barbers/${id}`),
 };
 
 export default api;
