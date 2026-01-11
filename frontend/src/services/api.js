@@ -62,9 +62,10 @@ export const frizerAPI = {
   getAll: () => api.get('/frizers'),
   getById: (id) => api.get(`/frizers/${id}`),
   create: (data) => api.post('/frizers', data),
-  update: (id, data) => api.put(`/frizers/${id}`, data),
   delete: (id) => api.delete(`/frizers/${id}`)
 };
+
+
 
 
 // API funkcije za usluge
@@ -96,5 +97,8 @@ export const barberAPI = {
   update: (id, barberData) => api.put(`/barbers/${id}`, barberData),
   delete: (id) => api.delete(`/barbers/${id}`),
 };
+export const verifyAPI = {
+  sendCode: (phone) => api.post('/verify/send-code', { phone }),
+  verifyCode: (phone, code) => api.post('/verify/verify-code', { phone, code }),}
 
 export default api;

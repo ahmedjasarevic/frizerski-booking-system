@@ -1,13 +1,13 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { serviceAPI, appointmentAPI } from "../services/api";
+import { serviceAPI, appointmentAPI, verifyAPI } from "../services/api";
 import TimeSlot from "../components/TimeSlot";
 import "./Booking.css";
 
 const TIME_SLOTS = [
-  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-  "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+  "09:00","09:30","10:00","10:30","11:00","11:30",
+  "12:00","12:30","13:00","13:30","14:00","14:30",
+  "15:00","15:30","16:00","16:30","17:00","17:30"
 ];
 
 export default function Booking() {
@@ -26,9 +26,15 @@ export default function Booking() {
   const [error, setError] = useState(null);
   const [loadingService, setLoadingService] = useState(true);
 
-  // Get minimum date (today)
+  // Twilio verification states
+  const [showCodeModal, setShowCodeModal] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [phoneSent, setPhoneSent] = useState("");
+
+  // Minimum date today
   const today = new Date().toISOString().split("T")[0];
 
+  // Fetch service info
   useEffect(() => {
     if (!serviceId) {
       navigate("/");
@@ -38,12 +44,8 @@ export default function Booking() {
     const fetchService = async () => {
       try {
         const response = await serviceAPI.getById(serviceId);
-        
-        if (response.data.success) {
-          setService(response.data.data);
-        } else {
-          setError("Usluga nije pronađena.");
-        }
+        if (response.data.success) setService(response.data.data);
+        else setError("Usluga nije pronađena.");
       } catch (err) {
         console.error("Error fetching service:", err);
         setError("Greška pri učitavanju usluge.");
@@ -55,6 +57,7 @@ export default function Booking() {
     fetchService();
   }, [serviceId, navigate]);
 
+  // Fetch available slots for selected date
   useEffect(() => {
     if (!date || !serviceId) {
       setAvailableSlots([]);
@@ -65,10 +68,7 @@ export default function Booking() {
       try {
         setLoading(true);
         const response = await appointmentAPI.getAvailableSlots(serviceId, date);
-        
-        if (response.data.success) {
-          setAvailableSlots(response.data.data || []);
-        }
+        if (response.data.success) setAvailableSlots(response.data.data || []);
       } catch (err) {
         console.error("Error fetching available slots:", err);
         setError("Greška pri učitavanju termina.");
@@ -80,6 +80,7 @@ export default function Booking() {
     fetchAvailableSlots();
   }, [date, serviceId]);
 
+  // Submit booking → send verification code
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -96,30 +97,48 @@ export default function Booking() {
 
     try {
       setSubmitting(true);
+      // Send verification code via verifyAPI
+      await verifyAPI.sendCode(phone.trim());
 
-      const response = await appointmentAPI.create({
-        service_id: parseInt(serviceId),
-        date,
-        time: selectedTime,
-        customer_name: name.trim(),
-        phone: phone.trim(),
-      });
-
-      if (response.data.success) {
-        navigate("/success", {
-          state: {
-            service: service?.name,
-            date,
-            time: selectedTime,
-            name: name.trim(),
-          },
-        });
-      }
+      setPhoneSent(phone.trim());
+      setShowCodeModal(true);
     } catch (err) {
-      console.error("Error creating appointment:", err);
-      setError(err.response?.data?.error || "Greška pri rezervaciji. Molimo pokušajte ponovo.");
+      console.error("Error sending verification code:", err);
+      setError(err.response?.data?.error || "Greška pri slanju verifikacijskog koda");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  // Verify code and create appointment
+  const handleVerifyCode = async () => {
+    if (!verificationCode.trim()) return;
+
+    try {
+      const res = await verifyAPI.verifyCode(phoneSent, verificationCode.trim());
+
+      if (res.data.success) {
+        // Create appointment
+        await appointmentAPI.create({
+          service_id: parseInt(serviceId),
+          date,
+          time: selectedTime,
+          customer_name: name.trim(),
+          phone: phoneSent,
+        });
+
+        alert("✅ Termin uspješno rezervisan!");
+        setShowCodeModal(false);
+        setVerificationCode("");
+        setName("");
+        setPhone("");
+        setDate("");
+        setSelectedTime("");
+        setAvailableSlots([]);
+      }
+    } catch (err) {
+      console.error("Error verifying code:", err);
+      setError(err.response?.data?.error || "❌ Neispravan kod");
     }
   };
 
@@ -140,9 +159,7 @@ export default function Booking() {
         <div className="error-container">
           <div className="error-icon">⚠️</div>
           <h2>Usluga nije pronađena</h2>
-          <button className="btn btn-primary" onClick={() => navigate("/")}>
-            Nazad na početnu
-          </button>
+          <button className="btn btn-primary" onClick={() => navigate("/")}>Nazad na početnu</button>
         </div>
       </div>
     );
@@ -161,11 +178,7 @@ export default function Booking() {
         </div>
 
         <form onSubmit={handleSubmit} className="booking-form card">
-          {error && (
-            <div className="error-message">
-              <span>⚠️</span> {error}
-            </div>
-          )}
+          {error && <div className="error-message"><span>⚠️</span> {error}</div>}
 
           <div className="form-group">
             <label htmlFor="date">Datum *</label>
@@ -243,11 +256,29 @@ export default function Booking() {
                 <span className="loading"></span>
                 Rezervisanje...
               </>
-            ) : (
-              "Potvrdi rezervaciju"
-            )}
+            ) : "Potvrdi rezervaciju"}
           </button>
         </form>
+
+        {/* ======== Verification Code Modal ======== */}
+        {showCodeModal && (
+          <div className="modal-overlay">
+            <div className="modal-content card">
+              <h3>Unesite verifikacijski kod</h3>
+              <p>Poslali smo kod na broj: {phoneSent}</p>
+              <input
+                type="text"
+                placeholder="Unesite kod"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+              />
+              <div className="modal-actions">
+                <button className="btn btn-outline" onClick={() => setShowCodeModal(false)}>Otkaži</button>
+                <button className="btn btn-primary" onClick={handleVerifyCode}>Potvrdi</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
