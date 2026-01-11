@@ -69,10 +69,6 @@ useEffect(() => {
       setLoading(true);
       const frizerId = service.frizer_id;
 
-      console.log("📅 Fetching available slots...");
-      console.log("serviceId:", serviceId);
-      console.log("frizerId:", frizerId);
-      console.log("date:", date);
 
       const response = await appointmentAPI.getAvailableSlots(
         serviceId,
@@ -80,7 +76,6 @@ useEffect(() => {
         date
       );
 
-      console.log("✅ API response:", response.data);
 
      if (response.data.success) {
   setAvailableSlots(response.data.data.freeSlots || []);
@@ -128,38 +123,47 @@ useEffect(() => {
   };
 
   // Verify code and create appointment
-   const handleVerifyCode = async () => {
-    if (!verificationCode.trim()) return;
+  // Verify code and create appointment
+const handleVerifyCode = async () => {
+  if (!verificationCode.trim()) return;
 
-    try {
-      const res = await verifyAPI.verifyCode(phoneSent, verificationCode.trim());
-      if (res.data.success) {
-        await appointmentAPI.create({
-          service_id: parseInt(serviceId),
-          frizer_id: parseInt(selectedFrizer),
-          date,
-          time: selectedTime,
-          customer_name: name.trim(),
-          phone: phoneSent,
-        });
+  try {
+    const res = await verifyAPI.verifyCode(phoneSent, verificationCode.trim());
+    if (res.data.success) {
+      // ✅ KORISTI service.frizer_id UMJESTO selectedFrizer
+      console.log("DEBUG: Podaci za slanje:", {
+        service_id: parseInt(serviceId),
+        frizer_id: service?.frizer_id,
+        service_full_object: service
+      });
+      await appointmentAPI.create({
+        service_id: parseInt(serviceId),
+        frizer_id: service.frizer_id, 
+        date,
+        time: selectedTime,
+        customer_name: name.trim(),
+        phone: phoneSent,
+      });
 
-        alert("✅ Termin uspješno rezervisan!");
-        setShowCodeModal(false);
-        setVerificationCode("");
-        setName("");
-        setPhone("");
-        setDate("");
-        setSelectedTime("");
-        setSelectedFrizer("");
-        setAvailableSlots([]);
-      }
-    } catch (err) {
-      console.error("Error verifying code:", err);
-      setError(err.response?.data?.error || "❌ Neispravan kod");
+      alert("✅ Termin uspješno rezervisan!");
+      
+      // Resetovanje stanja
+      setShowCodeModal(false);
+      setVerificationCode("");
+      setName("");
+      setPhone("");
+      setDate("");
+      setSelectedTime("");
+      // Ovdje također ukloni setSelectedFrizer("") jer ne postoji
+      setAvailableSlots([]);
     }
-  };
+  } catch (err) {
+    console.error("Error verifying code:", err);
+    setError(err.response?.data?.error || "❌ Neispravan kod");
+  }
+};
 
-  
+
   if (loadingService) {
     return (
       <div className="page-container">

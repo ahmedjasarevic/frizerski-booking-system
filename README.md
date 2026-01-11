@@ -28,7 +28,7 @@ Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prat
 - **Svi HTTP metodi**: GET, POST, PUT, DELETE
 - Frontend u React + Vite sa modernim UI/UX dizajnom
 - Backend u Express.js sa RESTful API rutama
-- **MySQL baza podataka** (umjesto Supabase)
+- **MySQL baza podataka** 
 - JWT autentifikacija za login
 - Sigurno učitavanje podataka sa error handlingom
 - Loading states i animacije
@@ -136,7 +136,7 @@ frizerski-booking-system/
 │   └── package.json
 ├── database/                 # SQL skripte
 │   ├── mysql-schema.sql     # MySQL schema sa tabelama
-│   └── schema.sql          # (stara Supabase schema)
+│   └── schema.sql        
 └── README.md
 ```
 
