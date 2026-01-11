@@ -1,30 +1,36 @@
-// models/Frizer.js
 import pool from '../config/database.js';
 
+
 class Frizer {
-  // Dohvati sve aktivne frizere
   static async findAll() {
-    try {
-      const [rows] = await pool.execute(
-        'SELECT id, name, bio, image FROM frizers WHERE active = 1 ORDER BY name ASC'
-      );
-      return rows;
-    } catch (error) {
-      throw new Error(`Greška pri dohvaćanju frizera: ${error.message}`);
-    }
+    const [rows] = await pool.execute(
+      'SELECT id, name, bio FROM frizers WHERE active = 1 ORDER BY name ASC'
+    );
+    return rows;
   }
 
-  // Dohvati frizera po ID-u
   static async findById(id) {
-    try {
-      const [rows] = await pool.execute(
-        'SELECT id, name, bio, image FROM frizers WHERE id = ? AND active = 1',
-        [id]
-      );
-      return rows[0] || null;
-    } catch (error) {
-      throw new Error(`Greška pri pronalaženju frizera: ${error.message}`);
-    }
+    const [rows] = await pool.execute(
+      'SELECT id, name, bio FROM frizers WHERE id = ? AND active = 1',
+      [id]
+    );
+    return rows[0];
+  }
+
+  static async create({ name, bio }) {
+    const [result] = await pool.execute(
+      'INSERT INTO frizers (name, bio, active) VALUES (?, ?, 1)',
+      [name, bio]
+    );
+
+    return { id: result.insertId, name, bio };
+  }
+
+  static async delete(id) {
+    await pool.execute(
+      'UPDATE frizers SET active = 0 WHERE id = ?',
+      [id]
+    );
   }
 }
 
