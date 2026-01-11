@@ -11,15 +11,17 @@ Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prat
 - Prikaz svih dostupnih frizerskih usluga  
 - Odabir datuma i slobodnog termina  
 - Unos imena i broja telefona za rezervaciju  
-- Potvrda rezervacije sa prikazom uspješnog završetka  
+- Potvrda rezervacije putem SMS verifikacije sa prikazom uspješnog završetka  
 
 ### Za admina:
 - **Prijava u sistem** (login forma)
 - Pregled svih rezervacija  
-- Brzi uvid u zauzetost termina po datumu i vremenu  
+- Brzi uvid u zauzetost termina po datumu i vremenu, te frizeru
 - **CRUD operacije za usluge** (kreiranje, čitanje, ažuriranje, brisanje)
 - **CRUD operacije za rezervacije** (brisanje, pregled)
+-  **CRUD operacije za frizere** (kreiranje, čitanje, ažuriranje, brisanje)
 - Filtriranje rezervacija po datumu
+- - Filtriranje rezervacija po frizeru
 - Jednostavan interfejs bez komplikacija  
 
 ### Tehničke funkcionalnosti:
@@ -34,7 +36,6 @@ Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prat
 - Loading states i animacije
 - Responsive dizajn za sve uređaje
 - Modularna struktura za lako proširenje
-- **Komentari na bosanskom jeziku** kroz kod
 
 ---
 
@@ -42,8 +43,7 @@ Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prat
 
 ### Preduslovi
 - Node.js (v18 ili noviji)
-- npm ili yarn
-- MySQL server (lokalno ili remote)
+- npm 
 
 ### 1. Kloniranje repozitorija
 ```bash
@@ -51,40 +51,33 @@ git clone https://github.com/ahmedjasarevic/frizerski-booking-system.git
 cd frizerski-booking-system
 ```
 
-### 2. MySQL Setup
 
-1. Pokrenite MySQL server
-2. Kreirajte bazu podataka:
-```sql
-CREATE DATABASE frizerski_booking CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+Kreirajte `.env` fajl u `root` folderu:
+```env
+# MySQL / Aiven Database
+DB_HOST=frizerski-booking-size-dd43.l.aivencloud.com
+DB_PORT=13515
+DB_USER=avnadmin
+DB_PASSWORD=AVNS_5-Ut0sHQlxbTxtcbLW5
+DB_NAME=frizerski_booking
+DB_SSL=true
+
+TWILIO_ACCOUNT_SID=ACe65ca260c66b3b19090f319215fb72c0
+TWILIO_AUTH_TOKEN=eb8be4fee32e49b4db02e35e6de7638b
+TWILIO_VERIFY_SERVICE_SID=VA92a871330bdb2f01264602ba7c1ba7bf
+VITE_API_URL=http://localhost:5000/api
+
+# Server config
+PORT=5000
+
 ```
 
-3. Pokrenite SQL skriptu iz `database/mysql-schema.sql` u MySQL klijentu:
-```bash
-mysql -u root -p frizerski_booking < database/mysql-schema.sql
-```
-
-Ili kopirajte sadržaj `database/mysql-schema.sql` i pokrenite u MySQL Workbench ili phpMyAdmin.
-
-### 3. Backend Setup
+### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
-
-Kreirajte `.env` fajl u `backend/` folderu:
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=frizerski_booking
-
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-PORT=5000
-NODE_ENV=development
-```
-
 Pokrenite backend:
 ```bash
 npm run dev
@@ -98,12 +91,6 @@ Backend će raditi na `http://localhost:5000`
 cd frontend
 npm install
 ```
-
-Kreirajte `.env` fajl u `frontend/` folderu:
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
 Pokrenite frontend:
 ```bash
 npm run dev
@@ -124,6 +111,7 @@ frizerski-booking-system/
 │   │   ├── controllers/       # CONTROLLERS (UserController.js, ServiceController.js, AppointmentController.js)
 │   │   ├── routes/           # Rute (userRoutes.js, serviceRoutes.js, appointments.js)
 │   │   ├── middleware/       # Middleware (auth.js)
+│   │   ├── scripts/          # Skripte za ubacivanje admina, provjera dostupni tabela
 │   │   ├── app.js            # Express aplikacija
 │   │   └── server.js         # Server entry point
 │   └── package.json
@@ -132,12 +120,13 @@ frizerski-booking-system/
 │   │   ├── components/       # Reusable komponente
 │   │   ├── pages/           # VIEWS (Home, Booking, Admin, Login, Success)
 │   │   ├── services/        # API servisi
+│   │   ├── assets/          # Logo i ostale slike
 │   │   └── App.jsx          # Glavna komponenta
 │   └── package.json
 ├── database/                 # SQL skripte
-│   ├── mysql-schema.sql     # MySQL schema sa tabelama
-│   └── schema.sql        
+│   ├── mysql-schema.sql     # MySQL schema sa tabelama    
 └── README.md
+└── .env
 ```
 
 ---
@@ -158,6 +147,7 @@ frizerski-booking-system/
 - Odabir datuma (minimalno danas)
 - Prikaz dostupnih vremenskih slotova
 - Validacija formi
+- Validacija putem SMS verifikacije
 - Real-time provjera zauzetosti
 
 ### Admin Panel
@@ -165,6 +155,7 @@ frizerski-booking-system/
 - **Rezervacije tab**:
   - Pregled svih rezervacija
   - Filtriranje po datumu
+  - Filtriranje po frizeru
   - Brisanje rezervacija (DELETE)
 - **Usluge tab**:
   - Pregled svih usluga
@@ -218,14 +209,13 @@ frizerski-booking-system/
 
 - **Backend:**
   - Express.js
-  - MySQL2 (za MySQL bazu)
   - bcryptjs (za hash-ovanje lozinki)
   - jsonwebtoken (za JWT autentifikaciju)
   - CORS
   - dotenv
 
 - **Database:**
-  - MySQL
+  - MySQL na Cloduu AIVEN
   - 3 tabele: users, services, appointments
 
 ---
@@ -237,11 +227,6 @@ frizerski-booking-system/
 - **3 Modela**: User, Service, Appointment
 - **Login forma** sa JWT autentifikacijom
 - **CRUD forme** za upravljanje uslugama i rezervacijama
-- **Komentari na bosanskom jeziku** kroz kod
 - Test korisnik: `admin` / `admin123`
 
 ---
-
-## 📄 Licenca
-
-ISC
