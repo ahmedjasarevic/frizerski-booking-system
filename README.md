@@ -39,7 +39,7 @@ Omogućava korisnicima da pregledaju usluge, rezervišu termine i adminu da prat
 
 ---
 
-## 🚀 Instalacija i pokretanje
+## 🚀 Instalacija / pokretanje
 
 ### Preduslovi
 - Node.js (v18 ili noviji)
