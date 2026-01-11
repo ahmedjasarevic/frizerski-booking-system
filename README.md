@@ -55,16 +55,16 @@ cd frizerski-booking-system
 Kreirajte `.env` fajl u `root` folderu:
 ```env
 # MySQL / Aiven Database
-DB_HOST=frizerski-booking-size-dd43.l.aivencloud.com
-DB_PORT=13515
-DB_USER=avnadmin
-DB_PASSWORD=AVNS_5-Ut0sHQlxbTxtcbLW5
-DB_NAME=frizerski_booking
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
 DB_SSL=true
 
-TWILIO_ACCOUNT_SID=ACe65ca260c66b3b19090f319215fb72c0
-TWILIO_AUTH_TOKEN=eb8be4fee32e49b4db02e35e6de7638b
-TWILIO_VERIFY_SERVICE_SID=VA92a871330bdb2f01264602ba7c1ba7bf
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_VERIFY_SERVICE_SID=
 VITE_API_URL=http://localhost:5000/api
 
 # Server config
