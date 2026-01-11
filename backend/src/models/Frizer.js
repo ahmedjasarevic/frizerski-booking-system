@@ -27,11 +27,12 @@ class Frizer {
   }
 
   static async delete(id) {
-    await pool.execute(
-      'UPDATE frizers SET active = 0 WHERE id = ?',
-      [id]
-    );
-  }
+  await pool.execute(
+    'DELETE FROM frizers WHERE id = ?',
+    [id]
+  );
+}
+
 }
 
 export default Frizer;

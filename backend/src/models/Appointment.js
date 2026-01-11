@@ -7,27 +7,38 @@ class Appointment {
     '12:00','12:30','13:00','13:30','14:00','14:30',
     '15:00','15:30','16:00','16:30','17:00','17:30'
   ];
+static async findAll() {
+  const [rows] = await pool.execute(`
+    SELECT 
+      a.*,
+      s.name AS service_name,
+      s.icon AS service_icon,
+      s.duration AS duration,
+      f.name AS frizer_name
+    FROM appointments a
+    JOIN services s ON a.service_id = s.id
+    JOIN frizers f ON a.frizer_id = f.id
+    ORDER BY a.date DESC, a.time ASC
+  `);
+  return rows;
+}
+static async findById(id) {
+  const [rows] = await pool.execute(`
+    SELECT 
+      a.*,
+      s.name AS service_name,
+      s.icon AS service_icon,
+      s.duration AS duration,
+      f.name AS frizer_name
+    FROM appointments a
+    JOIN services s ON a.service_id = s.id
+    JOIN frizers f ON a.frizer_id = f.id
+    WHERE a.id = ?
+  `, [id]);
 
-  static async findAll() {
-    const [rows] = await pool.execute(
-      `SELECT a.*, s.name AS service_name, s.icon AS service_icon 
-       FROM appointments a 
-       JOIN services s ON a.service_id = s.id 
-       ORDER BY a.date DESC, a.time ASC`
-    );
-    return rows;
-  }
+  return rows[0] || null;
+}
 
-  static async findById(id) {
-    const [rows] = await pool.execute(
-      `SELECT a.*, s.name AS service_name, s.icon AS service_icon 
-       FROM appointments a 
-       JOIN services s ON a.service_id = s.id 
-       WHERE a.id = ?`,
-      [id]
-    );
-    return rows[0] || null;
-  }
 
   static async findByFrizerAndDate(frizer_id, date) {
     let query = `SELECT a.*, s.duration 
