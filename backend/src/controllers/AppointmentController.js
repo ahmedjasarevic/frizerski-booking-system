@@ -56,28 +56,48 @@ class AppointmentController {
 
 
   static async createAppointment(req, res) {
-    try {
-      const { service_id, date, time, customer_name, phone } = req.body;
-      if (!service_id || !date || !time || !customer_name || !phone) {
-        return res.status(400).json({ success: false, error: 'Sva polja su obavezna' });
-      }
-      const appointment = await Appointment.create({ service_id, date, time, customer_name, phone });
-      res.status(201).json({ success: true, data: appointment });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
-    }
-  }
+  try {
+    // 1. Dodaj frizer_id ovdje (izvlačenje iz body-a)
+    const { service_id, frizer_id, date, time, customer_name, phone } = req.body;
 
-  static async updateAppointment(req, res) {
-    try {
-      const { id } = req.params;
-      const { service_id, date, time, customer_name, phone } = req.body;
-      const appointment = await Appointment.update(id, { service_id, date, time, customer_name, phone });
-      res.json({ success: true, data: appointment });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+    // 2. Dodaj frizer_id u provjeru (da ne bude prazno)
+    if (!service_id || !frizer_id || !date || !time || !customer_name || !phone) {
+      return res.status(400).json({ success: false, error: 'Sva polja su obavezna, uključujući frizera' });
     }
+
+    // 3. Proslijedi frizer_id modelu
+    const appointment = await Appointment.create({ 
+      service_id, 
+      frizer_id, 
+      date, 
+      time, 
+      customer_name, 
+      phone 
+    });
+
+    res.status(201).json({ success: true, data: appointment });
+  } catch (error) {
+    // Ovdje dobijaš 500 grešku ako model baci error
+    res.status(500).json({ success: false, error: error.message });
   }
+}
+ static async updateAppointment(req, res) {
+  try {
+    const { id } = req.params;
+    const { service_id, frizer_id, date, time, customer_name, phone } = req.body;
+    const appointment = await Appointment.update(id, { 
+      service_id, 
+      frizer_id, 
+      date, 
+      time, 
+      customer_name, 
+      phone 
+    });
+    res.json({ success: true, data: appointment });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+}
 
   static async deleteAppointment(req, res) {
     try {

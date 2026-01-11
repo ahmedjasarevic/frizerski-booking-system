@@ -21,6 +21,10 @@ router.post('/send-code', async (req, res) => {
 // 2️⃣ Provjera unesenog koda
 router.post('/verify-code', async (req, res) => {
   const { phone, code } = req.body;
+  console.log("--- PROVJERA KODA ---");
+  console.log("Servis SID:", process.env.TWILIO_VERIFY_SERVICE_SID);
+  console.log("Telefon iz body-a:", `"${phone}"`); // Navodnici će ti pokazati ako ima razmak
+  console.log("Kod iz body-a:", `"${code}"`);
   try {
     const verification_check = await client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_SID)

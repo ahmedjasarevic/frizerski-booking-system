@@ -93,7 +93,6 @@ static async getAvailableSlots(serviceId, frizer_id, date) {
 static async create({ service_id, frizer_id, date, time, customer_name, phone }) {
   if (!frizer_id) throw new Error("Morate odabrati frizera");
 
-  // ✅ Provjera datuma
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     throw new Error("Datum mora biti u formatu YYYY-MM-DD");
   }
@@ -102,7 +101,11 @@ static async create({ service_id, frizer_id, date, time, customer_name, phone })
   if (!service) throw new Error('Usluga nije pronađena');
 
   const available = await this.getAvailableSlots(service_id, frizer_id, date);
-  if (!available.includes(time)) throw new Error('Odabrani termin nije dostupan');
+  
+  // ✅ Ovdje je bila greška. Mora biti .freeSlots.includes
+  if (!available.freeSlots.includes(time)) {
+    throw new Error('Odabrani termin nije dostupan');
+  }
 
   const [result] = await pool.execute(
     `INSERT INTO appointments (service_id, frizer_id, date, time, customer_name, phone) 
@@ -113,28 +116,27 @@ static async create({ service_id, frizer_id, date, time, customer_name, phone })
   return await this.findById(result.insertId);
 }
 
+ static async update(id, data) {
+  const current = await this.findById(id);
+  if (!current) throw new Error('Rezervacija nije pronađena');
 
-  static async update(id, data) {
-    const current = await this.findById(id);
-    if (!current) throw new Error('Rezervacija nije pronađena');
+  const service = await Service.findById(data.service_id);
+  if (!service) throw new Error('Usluga nije pronađena');
 
-    const service = await Service.findById(data.service_id);
-    if (!service) throw new Error('Usluga nije pronađena');
+  const available = await this.getAvailableSlots(data.service_id, data.frizer_id, data.date);
 
-   const available = await this.getAvailableSlots(data.service_id, data.frizer_id, data.date);
-
-    if (!available.includes(data.time) && !(current.date === data.date && current.time === data.time)) {
-      throw new Error('Odabrani termin nije dostupan');
-    }
-
-    await pool.execute(
-  `UPDATE appointments SET service_id=?, frizer_id=?, date=?, time=?, customer_name=?, phone=? WHERE id=?`,
-  [data.service_id, data.frizer_id, data.date, data.time, data.customer_name, data.phone, id]
-);
-
-
-    return await this.findById(id);
+  // ✅ I ovdje ispravljamo na .freeSlots.includes
+  if (!available.freeSlots.includes(data.time) && !(current.date === data.date && current.time === data.time)) {
+    throw new Error('Odabrani termin nije dostupan');
   }
+
+  await pool.execute(
+    `UPDATE appointments SET service_id=?, frizer_id=?, date=?, time=?, customer_name=?, phone=? WHERE id=?`,
+    [data.service_id, data.frizer_id, data.date, data.time, data.customer_name, data.phone, id]
+  );
+
+  return await this.findById(id);
+}
 
   static async delete(id) {
     const [result] = await pool.execute('DELETE FROM appointments WHERE id=?', [id]);
