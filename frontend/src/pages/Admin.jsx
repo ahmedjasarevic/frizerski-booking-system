@@ -58,18 +58,57 @@ export default function Admin() {
       setLoading(false);
     }
   };
+  
+// Za filter
+const formatDateForFilter = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Dobije YYYY-MM-DD
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
-  const filteredAppointments = appointments.filter(
-    (apt) =>
-      (!filterDate || apt.date === filterDate) &&
-      (!filterFrizer || apt.frizer_id === parseInt(filterFrizer))
-  );
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("bs-BA", { year: "numeric", month: "long", day: "numeric" });
-  };
+// Za prikaz
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`; // 16.01.2026
+};
+
+
+const filteredAppointments = appointments.filter(
+  (apt) =>
+    (!filterDate || formatDateForFilter(apt.date) === filterDate) &&
+    (!filterFrizer || apt.frizer_id === parseInt(filterFrizer))
+);
+
+
+const formatTimeRange = (startTime, duration) => {
+  if (!startTime || !duration) return "";
+
+  // startTime = "15:00", duration u minutama
+  const [hours, minutes] = startTime.split(":").map(Number);
+  const startDate = new Date();
+  startDate.setHours(hours, minutes, 0, 0);
+
+  // dodaj trajanje
+  const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
+
+  const pad = (n) => n.toString().padStart(2, "0");
+
+  const startStr = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
+  const endStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
+
+  return `${startStr} - ${endStr}`;
+};
+
+
 
   const handleDeleteAppointment = async (id) => {
     if (!window.confirm("Da li ste sigurni da želite obrisati ovu rezervaciju?")) return;
@@ -195,13 +234,14 @@ export default function Admin() {
                         <span className="service-icon">{apt.service_icon || "💇"}</span>
                         <div>
                           <h3 className="service-name">{apt.service_name || "Nepoznata usluga"}</h3>
-                          <p className="appointment-date">📅 {formatDate(apt.date)}</p>
+                         <p className="appointment-date">📅 {formatDate(apt.date)}</p>
                         </div>
                       </div>
-                      <div className="appointment-time">
-                        <span className="time-icon">🕐</span>
-                        <span className="time-value">{apt.time}</span>
-                      </div>
+                     <div className="appointment-time">
+                    <span className="time-icon">🕐</span>
+                    <span className="time-value">{formatTimeRange(apt.time, apt.duration)}</span>
+                  </div>
+
                     </div>
                     <div className="appointment-details">
                       <div className="detail-row">

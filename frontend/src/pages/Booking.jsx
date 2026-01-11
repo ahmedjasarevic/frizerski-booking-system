@@ -21,6 +21,7 @@ export default function Booking() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [availableSlots, setAvailableSlots] = useState([]);
+  const [occupiedSlots, setOccupiedSlots] = useState([]); // Novo
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -30,7 +31,7 @@ export default function Booking() {
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [phoneSent, setPhoneSent] = useState("");
-
+  const frizerId = service?.frizer_id; 
   // Minimum date today
   const today = new Date().toISOString().split("T")[0];
 
@@ -57,28 +58,44 @@ export default function Booking() {
     fetchService();
   }, [serviceId, navigate]);
 
-  // Fetch available slots for selected date
-  useEffect(() => {
-    if (!date || !serviceId) {
-      setAvailableSlots([]);
-      return;
+useEffect(() => {
+  if (!date || !serviceId || !service) {
+    setAvailableSlots([]);
+    return;
+  }
+
+  const fetchAvailableSlots = async () => {
+    try {
+      setLoading(true);
+      const frizerId = service.frizer_id;
+
+      console.log("📅 Fetching available slots...");
+      console.log("serviceId:", serviceId);
+      console.log("frizerId:", frizerId);
+      console.log("date:", date);
+
+      const response = await appointmentAPI.getAvailableSlots(
+        serviceId,
+        frizerId,
+        date
+      );
+
+      console.log("✅ API response:", response.data);
+
+     if (response.data.success) {
+  setAvailableSlots(response.data.data.freeSlots || []);
+  setOccupiedSlots(response.data.data.occupiedSlots || []); // Novo
+}
+    } catch (err) {
+      console.error("Error fetching available slots:", err);
+      setError("Greška pri učitavanju termina.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const fetchAvailableSlots = async () => {
-      try {
-        setLoading(true);
-        const response = await appointmentAPI.getAvailableSlots(serviceId, date);
-        if (response.data.success) setAvailableSlots(response.data.data || []);
-      } catch (err) {
-        console.error("Error fetching available slots:", err);
-        setError("Greška pri učitavanju termina.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAvailableSlots();
-  }, [date, serviceId]);
+  fetchAvailableSlots();
+}, [date, serviceId, service]);
 
   // Submit booking → send verification code
   const handleSubmit = async (e) => {
@@ -111,16 +128,15 @@ export default function Booking() {
   };
 
   // Verify code and create appointment
-  const handleVerifyCode = async () => {
+   const handleVerifyCode = async () => {
     if (!verificationCode.trim()) return;
 
     try {
       const res = await verifyAPI.verifyCode(phoneSent, verificationCode.trim());
-
       if (res.data.success) {
-        // Create appointment
         await appointmentAPI.create({
           service_id: parseInt(serviceId),
+          frizer_id: parseInt(selectedFrizer),
           date,
           time: selectedTime,
           customer_name: name.trim(),
@@ -134,6 +150,7 @@ export default function Booking() {
         setPhone("");
         setDate("");
         setSelectedTime("");
+        setSelectedFrizer("");
         setAvailableSlots([]);
       }
     } catch (err) {
@@ -142,6 +159,7 @@ export default function Booking() {
     }
   };
 
+  
   if (loadingService) {
     return (
       <div className="page-container">
@@ -189,6 +207,7 @@ export default function Booking() {
               value={date}
               min={today}
               onChange={(e) => {
+                 console.log("Odabrani datum:", e.target.value);
                 setDate(e.target.value);
                 setSelectedTime("");
               }}
@@ -204,15 +223,19 @@ export default function Booking() {
                   <div className="loading-time-slots">Učitavanje...</div>
                 ) : (
                   TIME_SLOTS.map((slot) => {
-                    const isAvailable = availableSlots.includes(slot);
+                    const isFree = availableSlots.includes(slot);
+                    const isOccupied = occupiedSlots.includes(slot);
                     return (
-                      <TimeSlot
-                        key={slot}
-                        slot={slot}
-                        isSelected={selectedTime === slot}
-                        isBooked={!isAvailable}
-                        onClick={() => isAvailable && setSelectedTime(slot)}
-                      />
+                    <TimeSlot
+      key={slot}
+      slot={slot}
+      isSelected={selectedTime === slot}
+      // "Zauzeto" je samo ono što je u occupiedSlots
+      isBooked={isOccupied} 
+      // Dugme je isključeno ako nije slobodno (bilo da je zauzeto ili nema mjesta)
+      disabled={!isFree} 
+      onClick={() => isFree && setSelectedTime(slot)}
+    />
                     );
                   })
                 )}

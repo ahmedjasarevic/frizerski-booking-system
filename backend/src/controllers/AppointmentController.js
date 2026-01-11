@@ -32,15 +32,28 @@ class AppointmentController {
   }
 
   static async getAvailableSlots(req, res) {
-    try {
-      const { serviceId, date } = req.query;
-      if (!serviceId || !date) return res.status(400).json({ success: false, error: 'serviceId i date su obavezni' });
-      const slots = await Appointment.getAvailableSlots(parseInt(serviceId), date);
-      res.json({ success: true, data: slots });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+  try {
+    const { serviceId, date, frizerId } = req.query;
+
+    if (!serviceId || !date || !frizerId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'serviceId, date i frizerId su obavezni' 
+      });
     }
+
+    const slots = await Appointment.getAvailableSlots(
+      parseInt(serviceId),
+      parseInt(frizerId),
+      date
+    );
+
+    res.json({ success: true, data: slots });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
+}
+
 
   static async createAppointment(req, res) {
     try {

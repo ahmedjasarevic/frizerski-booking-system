@@ -82,8 +82,11 @@ export const appointmentAPI = {
   getAll: () => api.get('/appointments'),
   getById: (id) => api.get(`/appointments/${id}`),
   getByDate: (date) => api.get(`/appointments/date/${date}`),
-  getAvailableSlots: (serviceId, date) => 
-    api.get('/appointments/available-slots', { params: { serviceId, date } }),
+getAvailableSlots: (serviceId, frizerId, date) =>
+  api.get('/appointments/available-slots', { params: { serviceId, frizerId, date } }),
+
+
+
   create: (appointmentData) => api.post('/appointments', appointmentData),
   update: (id, appointmentData) => api.put(`/appointments/${id}`, appointmentData),
   delete: (id) => api.delete(`/appointments/${id}`),
